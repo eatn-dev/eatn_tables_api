@@ -29,7 +29,6 @@ router.post("/", createTableValidator, async (req, res) => {
 
 router.get("/", async (req, res) => {
     let tables
-    console.log(db.models)
     try {
         tables = await db.Table.findAll()
     } catch (err) {
