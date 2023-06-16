@@ -1,11 +1,11 @@
-# Menu API
+# Table API
 
 ---
 
-Node.js API used to manage menu.
+Node.js API used to manage tables.
 
 <!-- table of contents -->
-- [Menu API](#menu-api)
+- [Table API](#table-api)
   - [Getting started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Getting up and running](#getting-up-and-running)
@@ -14,7 +14,6 @@ Node.js API used to manage menu.
       - [Build](#build)
       - [Run](#run)
   - [Usage](#usage)
-  - [Testing](#testing)
   - [Contributing](#contributing)
     - [Built with](#built-with)
     - [Code style](#code-style)
@@ -28,7 +27,6 @@ Things you need for menu API to work:
 
 - [Node.js (18.x, 19.x) and npm](https://nodejs.org/)
 - [Postgres database](https://www.postgresql.org/)
-- Sqlite database (_only for testing_)
 
 ### Getting up and running
 
@@ -54,30 +52,30 @@ This application uses a Postgres database as it's main source of persistence. It
 
 ```yml
 # snippet of parent docker-compose.yml
-menu:
-    container_name: menu_api
-    build: ./menu
+tables:
+    container_name: tables_api
+    build: ./tables
     ports:
-        - "5000:5000"
+        - "5001:5001"
     volumes:
-        - ./menu:/usr/src/app
+        - ./tables:/usr/src/app
         - /usr/src/app/node_modules
     depends_on:
-        - menu_db
+        - tables_db
     restart: always
     environment:
-        DB_URI: "postgresql://root:eatn@menu_db:5432/menu"
+        DB_URI: "postgresql://root:eatn@tables_db:5432/tables"
 
-menu_db:
-    container_name: menu_db
+tables_db:
+    container_name: tables_db
     image: postgres
     volumes:
-        - ./db_volumes/menu/:/var/lib/postgresql/data
+        - ./db_volumes/tables/:/var/lib/postgresql/data
     restart: always
     environment:
         POSTGRES_USER: root
         POSTGRES_PASSWORD: eatn
-        POSTGRES_DB: menu
+        POSTGRES_DB: tables
 ```
 
 If you want to run this API on your system, you need to setup `DB_URI` variable yourself.
@@ -116,25 +114,7 @@ This will run the server in production mode without the hot reloading enabled.
 
 ## Usage
 
-This API does not have swagger enabled, but we provided an [Insomnia](https://insomnia.rest/) collection of all sample requests [here](./.github/readme/Insomnia-All_2023-05-10.json).
-
-## Testing
-
-Unit tests are a big part of software development so we made sure there are unit tests in place. To run them, `DB_URI` environment variable must be set first. See [here](#environment-variables).
-
-We encourage running tests using in-memory Sqlite database. That way mock data is erased the moment tests are done, filesystem stays clean and test performace is not taking a toll.
-
-To setup in-memory Sqlite database, run the following command:
-
-```sh
-export DB_URI="sqlite::memory:"
-```
-
-After that, run the following command in the same terminal:
-
-```sh
-npm run test
-```
+This API does not have swagger enabled, but we provided an [Insomnia](https://insomnia.rest/) collection of all sample requests [here](./.github/readme/Insomnia-All_2023-06-16.json%20(link)).
 
 ## Contributing
 
