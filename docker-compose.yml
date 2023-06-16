@@ -1,0 +1,65 @@
+version: "3"
+services:
+    menu:
+        container_name: menu_api
+        build: ./menu
+        ports:
+            - "5000:5000"
+        volumes:
+            - ./menu:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - menu_db
+        restart: always
+        environment:
+            DB_URI: "postgresql://root:eatn@menu_db:5432/menu"
+
+    menu_db:
+        container_name: menu_db
+        image: postgres
+        volumes:
+            - ./db_volumes/menu/:/var/lib/postgresql/data
+        restart: always
+        environment:
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: eatn
+            POSTGRES_DB: menu
+
+    # tables:
+    #     container_name: tables_api
+    #     build: ./tables
+    #     ports:
+    #         - "5000:5000"
+    #     volumes:
+    #         - ./tables:/usr/src/app
+    #         - /usr/src/app/node_modules
+    #     depends_on:
+    #         - tables_db
+    #     restart: always
+    #     environment:
+    #         DB_URI: "postgresql://root:eatn@tables_db:5432/tables"
+
+    # tables_db:
+    #     container_name: tables_db
+    #     image: postgres
+    #     volumes:
+    #         - ./db_volumes/tables/:/var/lib/postgresql/data
+    #     restart: always
+    #     environment:
+    #         POSTGRES_USER: root
+    #         POSTGRES_PASSWORD: eatn
+    #         POSTGRES_DB: tables
+    
+    cashier_frontend:
+        container_name: cashier_frontend
+        build: ./cashier_frontend
+        ports:
+            - "4000:4000"
+        volumes:
+            - ./cashier_frontend:/usr/src/app
+            - /usr/src/app/node_modules
+        depends_on:
+            - menu
+            # - tables
+        restart: always
+        env_file: cashier_frontend/.env
